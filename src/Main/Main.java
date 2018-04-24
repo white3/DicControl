@@ -38,8 +38,7 @@ public class Main {
 		Configure.setControlName(f.getName());
 		Configure.setControlPath(f.getAbsolutePath());
 		Configure.setTempPath(tempPath);
-		SynchronousFile s = new SynchronousFile();
-		s.copyDirectory(path, tempPath);
+		new SynchronousFile().copyDirectory(path, tempPath);
 	}
 	
 	/**
@@ -93,9 +92,8 @@ public class Main {
 			/**
 			 * test
 			 */
-
-			String path = "E:\\code\\Java\\DirectoryControl\\src";
-			String path2 = "E:\\code\\Java\\DirectoryControl\\temp_0";
+			String path = "E:\\code\\Java\\DirectoryControl\\aaaaa";
+			String path2 = "E:\\code\\Java\\DirectoryControl\\eeeee";
 			init(path, path2);
 			
 //			FileAlterationObserver observer = null;

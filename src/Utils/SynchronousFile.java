@@ -8,15 +8,15 @@ public class SynchronousFile {
 	private OutputStream out = null;
 
 	// test
-	public static void test() {
+	public static void main(String args[]) {
 		SynchronousFile sf = new SynchronousFile();
-		File f = new File("src");
+		File f = new File("aaaaa");
 		// String nn = f.getAbsolutePath();
 		// System.out.println(nn);
 		// System.out.println(nn.indexOf(f.getPath()));
 		// System.out.println(nn.substring(nn.indexOf(f.getPath())));
 		// System.out.println(f.getPath());
-		File fou = new File("src3");
+		File fou = new File("eeeee");
 		sf.copyDirectory(f, fou);
 	}
 
@@ -58,15 +58,16 @@ public class SynchronousFile {
 			nD.mkdir();
 		}
 		temp = oD.listFiles();
+		// System.out.println(temp.length + " | " + oD.getAbsolutePath() + " | " + nD.getAbsolutePath());
 		for (int i = 0; i < temp.length; i++) {
 			if (temp[i].isDirectory()) {
 				dics.add(temp[i]);
 				new File(ndp + "\\" + temp[i].getName()).mkdir();
-				System.out.println(ndp + "\\" + temp[i].getName());
+				// System.out.println(ndp + "\\" + temp[i].getName());
 			} else {
 				fils.add(temp[i]);
 				newf.add(new File(ndp + "\\" + temp[i].getName()));
-				System.out.println(ndp + "\\" + temp[i].getName());
+				// System.out.println(ndp + "\\" + temp[i].getName());
 			}
 		}
 		// 遍历整个目录，将被复制文件存储于链表 fils 中，新文件存储于链表 newf 中
@@ -113,7 +114,6 @@ public class SynchronousFile {
 	 */
 	public int SyncFile(File fin, File fout) {
 		byte[] b = new byte[1024];
-		@SuppressWarnings("unused")
 		int readbytes = -1;
 		if (!fin.isFile())
 			return 0;
