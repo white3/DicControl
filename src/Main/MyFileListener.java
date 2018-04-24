@@ -9,6 +9,10 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import Utils.Configure;
+import Utils.SynchronousFile;
+import Utils.resolve;
+
 /**
  * 
  * @author Menzel3
@@ -17,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MyFileListener extends FileAlterationListenerAdaptor {
 	private static Log log = LogFactory.getLog(MyFileListener.class);
+	private SynchronousFile cleanTool = new SynchronousFile();
 	private int addc = 0; // 添加控制
 	private int delc = 0; // 删除控制
 	private int changec = 0; // 修改控制
@@ -24,7 +29,7 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 	public MyFileListener() {
 		super();
 	}
-	
+
 	public MyFileListener(int addc, int delc, int changec) {
 		super();
 		this.addc = addc;
@@ -44,6 +49,9 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]文件夹改变:" + directory.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("文件夹改变:" + directory.getAbsolutePath());
+
+		if (changec == 1)
+			System.out.println(directory.getAbsolutePath() + "中的文件被修改！");
 	}
 
 	/**
@@ -58,7 +66,8 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]新建目录:" + directory.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("新建目录:" + directory.getAbsolutePath());
-		if(addc==1)
+
+		if (addc == 1)
 			directory.delete();
 	}
 
@@ -74,6 +83,10 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]删除目录:" + directory.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("删除目录:" + directory.getAbsolutePath());
+
+		if (delc == 1)
+			cleanTool.copyDirectory(new File(resolve.path2Path(directory.getAbsolutePath())), directory);
+
 	}
 
 	/**
@@ -88,6 +101,9 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]修改文件:" + file.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("修改文件:" + file.getAbsolutePath());
+
+		if (changec == 1)
+			cleanTool.SyncFile(new File(resolve.path2Path(file.getAbsolutePath())), file);
 	}
 
 	/**
@@ -102,6 +118,9 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]新建文件:" + file.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("新建文件:" + file.getAbsolutePath());
+
+		if (addc == 1)
+			file.delete();
 	}
 
 	/**
@@ -116,8 +135,9 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]删除文件:" + file.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("删除文件:" + file.getAbsolutePath());
-		if(addc==1)
-			file.delete();
+		if (delc == 1)
+			cleanTool.SyncFile(new File(resolve.path2Path(file.getAbsolutePath())), file);
+
 	}
 
 	/**

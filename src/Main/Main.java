@@ -8,6 +8,9 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import Utils.Configure;
+import Utils.SynchronousFile;
+
 /**
  * 文件系统监测测试类
  * 
@@ -26,6 +29,20 @@ public class Main {
 	}
 
 	/**
+	 * 初始化配置
+	 * @param path
+	 * @param tempPath
+	 */
+	public static void init(String path, String tempPath){
+		File f = new File(path);
+		Configure.setControlName(f.getName());
+		Configure.setControlPath(f.getAbsolutePath());
+		Configure.setTempPath(tempPath);
+		SynchronousFile s = new SynchronousFile();
+		s.copyDirectory(path, tempPath);
+	}
+	
+	/**
 	 * 测试文件系统监测
 	 * 
 	 * @param String[]
@@ -38,50 +55,58 @@ public class Main {
 		char[] chs;
 		int addc = 0, delc = 0, changec = 0, ques = 0;
 		try {
-			if (args.length == 2)
-				dir = args[1];
-			else if (args.length == 3) {
-				chs = args[1].toCharArray();
-				if (chs.length > 4) {
-					ques = 1;
-					throw new Exception();
-				} else
-					for (int i = chs.length - 1; i > 0; i--) {
-						switch (chs[i]) {
-						case 'a':
-							addc = 1;
-							break;
-						case 'd':
-							delc = 1;
-							break;
-						case 'c':
-							changec = 1;
-							break;
-						case '-':
-							continue;
-						default:
-							ques = 1;
-							throw new Exception();
-						}
-					}
-				dir = args[2];
-			}
-			System.out.println("[+]Menzel3 Listener is online !");
-			System.out.println("[+]The directory: ");
-			final String path = dir;
-			if (!new File(dir).isDirectory()) {
-				ques = 2;
-				throw new Exception();
-			}
-			FileAlterationObserver observer = null;
-			try {
-				observer = new FileAlterationObserver(path, null, null);
-				observer.addListener(new MyFileListener(addc, delc, changec));// 添加监听器
-				FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observer);
-				monitor.start();
-			} catch (Exception e) {
-				log.error("Exception", e);
-			}
+//			if (args.length == 2)
+//				dir = args[1];
+//			else if (args.length == 3) {
+//				chs = args[1].toCharArray();
+//				if (chs.length > 4) {
+//					ques = 1;
+//					throw new Exception();
+//				} else
+//					for (int i = chs.length - 1; i > 0; i--) {
+//						switch (chs[i]) {
+//						case 'a':
+//							addc = 1;
+//							break;
+//						case 'd':
+//							delc = 1;
+//							break;
+//						case 'c':
+//							changec = 1;
+//							break;
+//						case '-':
+//							continue;
+//						default:
+//							ques = 1;
+//							throw new Exception();
+//						}
+//					}
+//				dir = args[2];
+//			}
+//			System.out.println("[+]Menzel3 Listener is online !");
+//			System.out.println("[+]The directory: ");
+//			final String path = dir;
+//			if (!new File(dir).isDirectory()) {
+//				ques = 2;
+//				throw new Exception();
+//			}
+			/**
+			 * test
+			 */
+
+			String path = "E:\\code\\Java\\DirectoryControl\\src";
+			String path2 = "E:\\code\\Java\\DirectoryControl\\temp_0";
+			init(path, path2);
+			
+//			FileAlterationObserver observer = null;
+//			try {
+//				observer = new FileAlterationObserver(path, null, null);
+//				observer.addListener(new MyFileListener(addc, delc, changec)); // 添加监听器
+//				FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observer);
+//				monitor.start();
+//			} catch (Exception e) {
+//				log.error("Exception", e);
+//			}
 		} catch (Exception e) {
 			if (ques == 1) // 输入格式错误
 				help();
