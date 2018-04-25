@@ -22,25 +22,47 @@ public class Main {
 
 	public static void help() {
 		System.out.println("[?]Please input like this:");
-		System.out.println("[?] -[a|d|c] [directory]");
+		System.out.println("[?] -[a|d|c] [directory] [temp directory]");
 		System.out.println("[?] -a control the action of add 增加添加控制");
 		System.out.println("[?] -d control the action of delete 增加删除控制");
 		System.out.println("[?] -c control the action of change 增加修改控制");
 	}
 
 	/**
-	 * 初始化配置
-	 * @param path
-	 * @param tempPath
+	 * test
 	 */
-	public static void init(String path, String tempPath){
-		File f = new File(path);
-		Configure.setControlName(f.getName());
-		Configure.setControlPath(f.getAbsolutePath());
-		Configure.setTempPath(tempPath);
-		new SynchronousFile().copyDirectory(path, tempPath);
-	}
-	
+	// int addc = 1, delc = 1, changec = 1, ques = 0;
+
+	// if (args.length == 3) {
+	// dir = args[1];
+	// tempPath = args[2];
+	// } else if (args.length == 4) {
+	// chs = args[1].toCharArray();
+	// for (int i = chs.length - 1; i > 0; i--) {
+	// switch (chs[i]) {
+	// case 'a':
+	// addc = 1;
+	// break;
+	// case 'd':
+	// delc = 1;
+	// break;
+	// case 'c':
+	// changec = 1;
+	// break;
+	// case '-':
+	// continue;
+	// default:
+	// ques = 1;
+	// throw new Exception();
+	// }
+	// }
+	// dir = args[2];
+	// tempPath = args[3];
+	// } else {
+	// ques = 1;
+	// throw new Exception();
+	// }
+
 	/**
 	 * 测试文件系统监测
 	 * 
@@ -49,62 +71,40 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		long interval = 1000;
-		String dir = "";
-		// mzl -[a|d|c] dir
-		char[] chs;
+		String dir = "", tempPath = "";
+		Scanner cin = new Scanner(System.in);
 		int addc = 0, delc = 0, changec = 0, ques = 0;
 		try {
-//			if (args.length == 2)
-//				dir = args[1];
-//			else if (args.length == 3) {
-//				chs = args[1].toCharArray();
-//				if (chs.length > 4) {
-//					ques = 1;
-//					throw new Exception();
-//				} else
-//					for (int i = chs.length - 1; i > 0; i--) {
-//						switch (chs[i]) {
-//						case 'a':
-//							addc = 1;
-//							break;
-//						case 'd':
-//							delc = 1;
-//							break;
-//						case 'c':
-//							changec = 1;
-//							break;
-//						case '-':
-//							continue;
-//						default:
-//							ques = 1;
-//							throw new Exception();
-//						}
-//					}
-//				dir = args[2];
-//			}
-//			System.out.println("[+]Menzel3 Listener is online !");
-//			System.out.println("[+]The directory: ");
-//			final String path = dir;
-//			if (!new File(dir).isDirectory()) {
-//				ques = 2;
-//				throw new Exception();
-//			}
-			/**
-			 * test
-			 */
-			String path = "E:\\code\\Java\\DirectoryControl\\aaaaa";
-			String path2 = "E:\\code\\Java\\DirectoryControl\\eeeee";
-			init(path, path2);
-			
-//			FileAlterationObserver observer = null;
-//			try {
-//				observer = new FileAlterationObserver(path, null, null);
-//				observer.addListener(new MyFileListener(addc, delc, changec)); // 添加监听器
-//				FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observer);
-//				monitor.start();
-//			} catch (Exception e) {
-//				log.error("Exception", e);
-//			}
+			System.out.println("[+]Menzel3 Listener is online !");
+			help();
+			System.out.println("[+]Input the directory: ");
+			dir = cin.nextLine();
+			final String path = dir;
+			System.out.println("[+]Input the temp directory: ");
+			tempPath = cin.nextLine();
+			System.out.println("[+]Input the select value {adc}, for example: 000.");
+			addc = cin.nextInt();
+			changec = (addc/10)%10;
+			delc = addc%10;
+			addc /= 100;
+			cin.close();
+			if (!new File(dir).isDirectory()) {
+				ques = 2;
+				throw new Exception();
+			}
+			Configure.setTempDir(tempPath);
+			Configure.setControlDir(path);
+			new SynchronousFile().copyDirectory(path, tempPath);
+
+			FileAlterationObserver observer = null;
+			try {
+				observer = new FileAlterationObserver(path, null, null);
+				observer.addListener(new MyFileListener(addc, delc, changec)); // 添加监听器
+				FileAlterationMonitor monitor = new FileAlterationMonitor(interval, observer);
+				monitor.start();
+			} catch (Exception e) {
+				log.error("Exception", e);
+			}
 		} catch (Exception e) {
 			if (ques == 1) // 输入格式错误
 				help();

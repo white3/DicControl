@@ -8,9 +8,8 @@ public class resolve {
 	 * @return
 	 */
 	public static String path2Path(String path) {
-		return Configure.getTempPath()
-				+ path.substring(path.indexOf(Configure.getControlName() + Configure.controlName.length()));
-
+		return Configure.tempDir.getAbsolutePath() + path.substring(
+				path.indexOf(Configure.controlDir.getName()) + Configure.getControlDir().getName().length());
 	}
-
+	
 }

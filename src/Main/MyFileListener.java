@@ -135,9 +135,10 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]删除文件:" + file.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("删除文件:" + file.getAbsolutePath());
-		if (delc == 1)
+		if (delc == 1) {
+			// System.out.println(resolve.path2Path(file.getAbsolutePath()) + " | " + file.getAbsolutePath());
 			cleanTool.SyncFile(new File(resolve.path2Path(file.getAbsolutePath())), file);
-
+		}
 	}
 
 	/**

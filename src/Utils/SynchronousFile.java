@@ -7,19 +7,6 @@ public class SynchronousFile {
 	private InputStream in = null;
 	private OutputStream out = null;
 
-	// test
-	public static void main(String args[]) {
-		SynchronousFile sf = new SynchronousFile();
-		File f = new File("aaaaa");
-		// String nn = f.getAbsolutePath();
-		// System.out.println(nn);
-		// System.out.println(nn.indexOf(f.getPath()));
-		// System.out.println(nn.substring(nn.indexOf(f.getPath())));
-		// System.out.println(f.getPath());
-		File fou = new File("eeeee");
-		sf.copyDirectory(f, fou);
-	}
-
 	/**
 	 * path 路径下的文件目录复制到 newPath 目录路径中
 	 * 
@@ -30,10 +17,7 @@ public class SynchronousFile {
 	 * @return 如果为 1， 则移动成功，否则失败。
 	 */
 	public int copyDirectory(String path, String newPath) {
-		File oD = new File(path); // old directory
-		File nD = new File(path); // new directory
-		
-		return copyDirectory(oD, nD);
+		return copyDirectory(new File(path), new File(newPath));
 	}
 
 	/**
@@ -54,20 +38,15 @@ public class SynchronousFile {
 		File[] temp;
 		if (!oD.isDirectory())
 			return 0;
-		if (!nD.isDirectory()) {
-			nD.mkdir();
-		}
+		nD.mkdir();
 		temp = oD.listFiles();
-		// System.out.println(temp.length + " | " + oD.getAbsolutePath() + " | " + nD.getAbsolutePath());
 		for (int i = 0; i < temp.length; i++) {
 			if (temp[i].isDirectory()) {
 				dics.add(temp[i]);
 				new File(ndp + "\\" + temp[i].getName()).mkdir();
-				// System.out.println(ndp + "\\" + temp[i].getName());
 			} else {
 				fils.add(temp[i]);
 				newf.add(new File(ndp + "\\" + temp[i].getName()));
-				// System.out.println(ndp + "\\" + temp[i].getName());
 			}
 		}
 		// 遍历整个目录，将被复制文件存储于链表 fils 中，新文件存储于链表 newf 中
@@ -77,20 +56,15 @@ public class SynchronousFile {
 				if (temp[i].isDirectory()) {
 					dics.add(temp[i]);
 					new File(ndp + "\\" + temp[i].getName()).mkdirs();
-					// System.out.println(ndp + "\\" + temp[i].getName());
 				} else {
 					fils.add(temp[i]);
 					tmp = temp[i].getAbsolutePath();
 					newf.add(new File(ndp + tmp.substring(odpl)));
-					// System.out.println(ndp + tmp.substring(odpl));
 				}
 			}
 		}
-		// 复制文件
-		while (!fils.isEmpty() && !newf.isEmpty()) {
+		while (!fils.isEmpty() && !newf.isEmpty())
 			SyncFile(fils.removeFirst(), newf.removeFirst());
-			// System.out.println(fils.removeFirst().getAbsolutePath() + " | " + newf.removeFirst().getAbsolutePath());
-		}
 		return 1;
 	}
 
@@ -101,9 +75,7 @@ public class SynchronousFile {
 	 * @param path2
 	 */
 	public int SyncFile(String path1, String path2) {
-		File fin = new File(path1);
-		File fout = new File(path2);
-		return SyncFile(fin, fout);
+		return SyncFile(new File(path1), new File(path2));
 	}
 
 	/**
@@ -117,13 +89,8 @@ public class SynchronousFile {
 		int readbytes = -1;
 		if (!fin.isFile())
 			return 0;
-		if (!fout.isFile())
-			try {
-				fout.createNewFile();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
 		try {
+			fout.createNewFile();
 			in = new FileInputStream(fin);
 			out = new FileOutputStream(fout);
 			while ((readbytes = in.read(b)) != -1) {
