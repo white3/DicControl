@@ -50,8 +50,12 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("文件夹改变:" + directory.getAbsolutePath());
 
-		if (changec == 1)
-			System.out.println(directory.getAbsolutePath() + "中的文件被修改！");
+		if (changec == 1) {
+			int temp = resolve.num;
+			resolve.num = -1;
+			cleanTool.copyDirectory(new File(resolve.path2Path(directory.getAbsolutePath())), directory);
+			resolve.num = temp;
+		}
 	}
 
 	/**
@@ -66,9 +70,12 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]新建目录:" + directory.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("新建目录:" + directory.getAbsolutePath());
+		resolve.num++;
 
-		if (addc == 1)
-			directory.delete();
+		if (addc == 1) {
+			if(resolve.num>0)
+				directory.delete();
+		}
 	}
 
 	/**
@@ -102,8 +109,12 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("修改文件:" + file.getAbsolutePath());
 
-		if (changec == 1)
+		if (changec == 1) {
+			int  temp = resolve.num;
+			resolve.num = -1;
 			cleanTool.SyncFile(new File(resolve.path2Path(file.getAbsolutePath())), file);
+			resolve.num = temp;
+		}
 	}
 
 	/**
@@ -118,9 +129,12 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]新建文件:" + file.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("新建文件:" + file.getAbsolutePath());
+		resolve.num++;
 
-		if (addc == 1)
-			file.delete();
+		if (addc == 1) {
+			if(resolve.num>0)
+				file.delete();
+		}
 	}
 
 	/**
@@ -135,8 +149,8 @@ public class MyFileListener extends FileAlterationListenerAdaptor {
 		System.out.println("[+]删除文件:" + file.getAbsolutePath() + "\n[+]改变时间: "
 				+ new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 		log.info("删除文件:" + file.getAbsolutePath());
+		resolve.num--;
 		if (delc == 1) {
-			// System.out.println(resolve.path2Path(file.getAbsolutePath()) + " | " + file.getAbsolutePath());
 			cleanTool.SyncFile(new File(resolve.path2Path(file.getAbsolutePath())), file);
 		}
 	}

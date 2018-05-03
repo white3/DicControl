@@ -33,8 +33,7 @@ public class SynchronousFile {
 		LinkedList<File> dics = new LinkedList<>();
 		LinkedList<File> fils = new LinkedList<>();
 		LinkedList<File> newf = new LinkedList<>();
-		String tmp = "", ndp = nD.getAbsolutePath().trim(); // tmp 为缓存空间，ndp 为新文件夹的绝对路径
-		int odpl = oD.getAbsolutePath().length(); // 被移动文件夹的路径长度
+		String tmp = "", ndp = nD.getAbsolutePath().trim(), odp = oD.getAbsolutePath().trim(); // tmp 为缓存空间，ndp 为新文件夹的绝对路径
 		File[] temp;
 		if (!oD.isDirectory())
 			return 0;
@@ -55,16 +54,22 @@ public class SynchronousFile {
 			for (int i = 0; i < temp.length; i++) {
 				if (temp[i].isDirectory()) {
 					dics.add(temp[i]);
-					new File(ndp + "\\" + temp[i].getName()).mkdirs();
+					new File(resolve.path2Path(odp, ndp, temp[i].getAbsolutePath())).mkdirs();
 				} else {
 					fils.add(temp[i]);
 					tmp = temp[i].getAbsolutePath();
-					newf.add(new File(ndp + tmp.substring(odpl)));
+					newf.add(new File(resolve.path2Path(odp, ndp, tmp)));
 				}
 			}
 		}
-		while (!fils.isEmpty() && !newf.isEmpty())
+		while (!fils.isEmpty() && !newf.isEmpty()) {
+			/**
+			 * test
+			 */
+//			File a = fils.removeFirst(), b = newf.removeFirst();
+//			System.out.println(a.getAbsolutePath() + " |" + b.getAbsolutePath());
 			SyncFile(fils.removeFirst(), newf.removeFirst());
+		}
 		return 1;
 	}
 
